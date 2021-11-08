@@ -1,14 +1,14 @@
-package com.glinkaz.statki;
+package com.glinkaz.samoloty;
 
 import com.glinkaz.wyjatki.WyjatekEkonomiczny;
 import com.glinkaz.wyjatki.WyjatekLotniczy;
 import com.glinkaz.wyjatki.WyjatekPrzeladowania;
 
-public class StatekKosmicznyTowarowy extends StatekKosmiczny{
+public class SamolotTowarowy extends Samolot{
     private int iloscLadunku = 0;
     private final int maxIloscLadunku;
 
-    public StatekKosmicznyTowarowy(String nazwa, int maxPredkosc, int maxIloscLadunku) {
+    public SamolotTowarowy(String nazwa, int maxPredkosc, int maxIloscLadunku) {
         super(nazwa, maxPredkosc);
         this.maxIloscLadunku = maxIloscLadunku;
     }

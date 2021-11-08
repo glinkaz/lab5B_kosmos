@@ -1,6 +1,6 @@
-package com.glinkaz.statki;
+package com.glinkaz.samoloty;
 
-public class Mysliwiec extends StatekKosmiczny{
+public class Mysliwiec extends Samolot{
     private  int iloscRakiet = 0;
 
     public Mysliwiec(String nazwa, int maxPredkosc) {

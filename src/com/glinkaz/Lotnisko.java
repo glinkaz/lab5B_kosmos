@@ -1,9 +1,9 @@
 package com.glinkaz;
 
-import com.glinkaz.statki.Mysliwiec;
-import com.glinkaz.statki.StatekKosmiczny;
-import com.glinkaz.statki.StatekKosmicznyPasazerski;
-import com.glinkaz.statki.StatekKosmicznyTowarowy;
+import com.glinkaz.samoloty.Mysliwiec;
+import com.glinkaz.samoloty.Samolot;
+import com.glinkaz.samoloty.SamolotPasazerski;
+import com.glinkaz.samoloty.SamolotTowarowy;
 import com.glinkaz.wyjatki.WyjatekLotniczy;
 
 import java.util.Comparator;
@@ -11,32 +11,32 @@ import java.util.LinkedList;
 import java.util.Random;
 import java.util.function.Consumer;
 
-public class PortKosmiczny {
-    private final LinkedList<StatekKosmiczny> statki;
+public class Lotnisko {
+    private final LinkedList<Samolot> samoloty;
 
-    public PortKosmiczny(int ileStatkow) {
-        statki = new LinkedList<>();
+    public Lotnisko(int ileStatkow) {
+        samoloty = new LinkedList<>();
         for (int i = 0; i < ileStatkow; i++) {
             int zmiennaLosowa = new Random().nextInt(3);
             if(zmiennaLosowa == 0){
-                statki.add(new StatekKosmicznyPasazerski(generujNazwe(),new Random().nextInt(4001)+1000, new Random().nextInt(101)+100));
+                samoloty.add(new SamolotPasazerski(generujNazwe(),new Random().nextInt(4001)+1000, new Random().nextInt(101)+100));
             } else if( zmiennaLosowa == 1 ){
-                statki.add(new StatekKosmicznyTowarowy(generujNazwe(), new Random().nextInt(901)+100, new Random().nextInt(901)+100) );
+                samoloty.add(new SamolotTowarowy(generujNazwe(), new Random().nextInt(901)+100, new Random().nextInt(901)+100) );
             } else {
-                statki.add(new Mysliwiec(generujNazwe(), new Random().nextInt(5001)+5000));
+                samoloty.add(new Mysliwiec(generujNazwe(), new Random().nextInt(5001)+5000));
             }
         }
     }
 
-    public void zaladunekStatkowKosmicznych(){
-        statki.forEach(samolot -> {
-            if(samolot instanceof StatekKosmicznyPasazerski) {
+    public void zaladunekSamolotow(){
+        samoloty.forEach(samolot -> {
+            if(samolot instanceof SamolotPasazerski) {
                 try {
                     samolot.zaladunek(new Random().nextInt(400)+1);
                 } catch (WyjatekLotniczy e) {
                     System.out.println("Blad lotniczy");
                 }
-            }else if(samolot instanceof StatekKosmicznyTowarowy){
+            }else if(samolot instanceof SamolotTowarowy){
                 try {
                     samolot.zaladunek(new Random().nextInt(200)+1);
                 } catch (WyjatekLotniczy e) {
@@ -48,40 +48,40 @@ public class PortKosmiczny {
         });
     }
 
-    public void dzialaniaKosmiczne(){
-        Consumer<LinkedList<StatekKosmiczny>> wykonajDzialaniaKosmiczne = statki -> {
-            Consumer<StatekKosmiczny> wypisz = statek -> System.out.println(statek.toString());
-            statki.forEach(wypisz);
+    public void dzialaniaLotniskowe(){
+        Consumer<LinkedList<Samolot>> wykonajDzialaniaLotniskowe = samoloty -> {
+            Consumer<Samolot> wypisz = samolot -> System.out.println(samolot.toString());
+            samoloty.forEach(wypisz);
             System.out.println();
-            statki.forEach(StatekKosmiczny::laduj);
-            statki.forEach(wypisz);
+            samoloty.forEach(Samolot::laduj);
+            samoloty.forEach(wypisz);
             System.out.println();
-            statki.forEach(samolot -> {
+            samoloty.forEach(samolot -> {
                 try {
                     samolot.zaladunek(new Random().nextInt(400)+1);
                 } catch (WyjatekLotniczy e) {
                     System.out.println("Blad Lotniczy");
                 }
             });
-            statki.forEach(wypisz);
+            samoloty.forEach(wypisz);
             System.out.println();
-            statki.forEach(samolot -> samolot.start(10));
-            statki.forEach(wypisz);
+            samoloty.forEach(samolot -> samolot.start(10));
+            samoloty.forEach(wypisz);
             System.out.println();
-            statki.forEach(samolot -> {
+            samoloty.forEach(samolot -> {
                 if(samolot instanceof Mysliwiec){
                     ((Mysliwiec) samolot).atak();
                 }
             });
-            statki.forEach(wypisz);
+            samoloty.forEach(wypisz);
             System.out.println();
         };
-        wykonajDzialaniaKosmiczne.accept(statki);
+        wykonajDzialaniaLotniskowe.accept(samoloty);
     }
 
-    public void sortowanieStatkowKosmicznych(){
-        statki.sort(Comparator.comparingInt(StatekKosmiczny::getMaxPredkosc));
-        statki.sort((o1, o2) -> {
+    public void sortowanieSamolotow(){
+        samoloty.sort(Comparator.comparingInt(Samolot::getMaxPredkosc));
+        samoloty.sort((o1, o2) -> {
             if(o1.getNazwa().length() < 5 || o2.getNazwa().length() < 5){
                 return 0;
             }else{
@@ -92,7 +92,7 @@ public class PortKosmiczny {
 
     @FunctionalInterface
     public interface LosowyKomparator{
-         Comparator<StatekKosmiczny> losujKomparator(Comparator<StatekKosmiczny> c1, Comparator<StatekKosmiczny> c2);
+         Comparator<Samolot> losujKomparator(Comparator<Samolot> c1, Comparator<Samolot> c2);
     }
 
     public void sortowanieLosowe() {
@@ -103,15 +103,15 @@ public class PortKosmiczny {
                 return c2;
             }
         };
-        Comparator<StatekKosmiczny> c1 = Comparator.comparingInt(StatekKosmiczny::getMaxPredkosc);
-        Comparator<StatekKosmiczny> c2 = (o1, o2) -> {
+        Comparator<Samolot> c1 = Comparator.comparingInt(Samolot::getMaxPredkosc);
+        Comparator<Samolot> c2 = (o1, o2) -> {
             if(o1.getNazwa().length() < 5 || o2.getNazwa().length() < 5){
                 return 0;
             }else{
                 return o1.getNazwa().compareTo(o2.getNazwa());
             }
         };
-        statki.sort(comparator.losujKomparator(c1, c2));
+        samoloty.sort(comparator.losujKomparator(c1, c2));
     }
 
 
@@ -132,7 +132,7 @@ public class PortKosmiczny {
         String generuj();
     }
 
-    public LinkedList<StatekKosmiczny> getStatki() {
-        return statki;
+    public LinkedList<Samolot> getSamoloty() {
+        return samoloty;
     }
 }

@@ -1,15 +1,15 @@
-package com.glinkaz.statki;
+package com.glinkaz.samoloty;
 
 import com.glinkaz.wyjatki.WyjatekLotniczy;
 
-public abstract class StatekKosmiczny {
+public abstract class Samolot {
     private final String nazwa;
     private final int maxPredkosc;
     private int iloscGodzWPowietrzu;
     private boolean zaladunekPoprawny;
     private boolean wPowietrzu;
 
-    public StatekKosmiczny(String nazwa, int maxPredkosc) {
+    public Samolot(String nazwa, int maxPredkosc) {
         this.nazwa = nazwa;
         this.maxPredkosc = maxPredkosc;
         iloscGodzWPowietrzu = 0;
